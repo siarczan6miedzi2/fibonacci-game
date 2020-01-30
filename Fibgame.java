@@ -12,7 +12,7 @@ public class Fibgame
 	static final int WIDTH = 1600;
 	static final int HEIGHT = 900;
 
-	static NumberGrid numberGrid;
+	private static NumberGrid grid;
 	
 	Fibgame()
 	{
@@ -22,7 +22,7 @@ public class Fibgame
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		f.setResizable(false);
-		NumberGrid grid = new NumberGrid(6);
+		grid = new NumberGrid(6);
 		grid.setBounds(50, 50, HEIGHT-100, HEIGHT-100);
 		f.add(grid);
 		f.pack();
@@ -33,5 +33,6 @@ public class Fibgame
 	public static void main(String[] args)
 	{
 		new Fibgame();
+		grid.resetState();
 	}
 }

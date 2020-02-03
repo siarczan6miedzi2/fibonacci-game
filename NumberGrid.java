@@ -6,7 +6,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 import java.io.*;
 
-public class NumberGrid extends JPanel implements ActionListener
+public class NumberGrid extends JPanel //implements ActionListener
 {
 	// macros
 	public static final int WAITING = 0; // no buttons clicked
@@ -33,7 +33,7 @@ public class NumberGrid extends JPanel implements ActionListener
 			{
 				final int ii = i;
 				final int jj = j;
-				field[i][j] = new NumberField("" + i + " " + j);
+				field[i][j] = new NumberField(0);
 				this.add(field[i][j]);
 				field[i][j].addActionListener(new ActionListener()
 				{
@@ -86,16 +86,27 @@ public class NumberGrid extends JPanel implements ActionListener
 		return false;
 	}
 	
-	private void merge()
+	private int mergeable()
 	{
-		if (vicinalFields())
-		{
-			// let it merge
-		}
+		int lvl1 = field[fld1i][fld1j].getLevel();
+		int lvl2 = field[fld2i][fld2j].getLevel();
+		if (lvl1 == 0 && lvl2 == 0) return 1; // mergeable (add 1 level)
+		if (lvl1 - lvl2 == 1) return 2;       // mergeable (add 2 levels)
+		if (lvl2 - lvl1 == 1) return 1;       // mergeable (add 1 level)
+		return 0;                             // non mergeable
 	}
 	
+	private void merge()
+	{
+		int mergeflag = mergeable();
+		if (vicinalFields() && mergeflag > 0)
+		{
+			field[fld2i][fld2j].upgrade(mergeflag); // 1 level for default order, 2 levels for reversed order
+		}
+	}
+/*	
 	public void actionPerformed(ActionEvent event)
 	{
 		
-	}
+	}*/
 }

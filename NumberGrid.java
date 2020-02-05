@@ -5,6 +5,7 @@ import java.awt.GridLayout;
 import javax.swing.*;
 import javax.swing.event.*;
 import java.io.*;
+import javax.swing.Timer;
 
 public class NumberGrid extends JPanel //implements ActionListener
 {
@@ -48,8 +49,8 @@ public class NumberGrid extends JPanel //implements ActionListener
 	
 	private void buttonClicked(final int i, final int j)
 	{
-		this.state++; // WAITING -> CLICKED, CLICKED -> ACTION
-		if (this.state == CLICKED)
+		state++; // WAITING -> CLICKED, CLICKED -> ACTION
+		if (state == CLICKED)
 		{
 			field[i][j].setBackground(Color.RED);
 			fld1i = i;
@@ -98,15 +99,88 @@ public class NumberGrid extends JPanel //implements ActionListener
 	
 	private void merge()
 	{
-		int mergeflag = mergeable();
-		if (vicinalFields() && mergeflag > 0)
+		int mergeFlag = mergeable();
+		if (vicinalFields() && mergeFlag > 0)
 		{
-			field[fld2i][fld2j].upgrade(mergeflag); // 1 level for default order, 2 levels for reversed order
+			field[fld2i][fld2j].upgrade(mergeFlag); // 1 level for default order, 2 levels for reversed order
+			falldown(fld1i, fld1j);                 // first clicked field generates the hole
 		}
 	}
-/*	
-	public void actionPerformed(ActionEvent event)
+	
+	private void delay(int ms, int x, int y, String command)
 	{
-		
-	}*/
+		Timer timer = new Timer(ms, new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				if (command == "visible") // show field[x][y]
+				{
+					field[x][y].setVisible(true);
+					field[x][y].getParent().revalidate();
+					field[x][y].getParent().repaint();
+				}
+				else if (command == "invisible") // unshow field[x][y]
+				{
+					field[x][y].setVisible(false);
+					field[x][y].getParent().revalidate();
+					field[x][y].getParent().repaint();
+				}
+				else if (command == "steal") // steal properties from a field above
+				{
+					field[x][y].steal(field[x-1][y]);
+				}
+				else if (command == "renew") // renew the field
+				{
+					field[x][y].renew(0);
+					field[x][y].setVisible(true);
+				}
+			}
+		});
+		timer.setRepeats(false);
+		timer.start();
+	}
+	
+	private void falldown(int x, int y)
+	{
+		for (int i = 0; i < x; i++)
+		{
+			delay(200*i, x-i, y, "invisible");   // field[i][y] vanishes
+			delay(200*i, x-i, y, "steal");       // field[i][y] steals properties of field[i-1][y]
+			delay(200*(i+1), x-i, y, "visible"); // field[i][y] reappeares after 300 ms
+		}
+		// finally, cope with the top field
+		delay(200*x, 0, y, "invisible");
+		delay(200*(x+1), 0, y, "renew");
+	}
 }
+
+/*	// waits [ms] time and then [shows] (or hides) field[x][y]
+	public void delay(int ms, int x, int y, boolean show)
+	{
+		Timer timer = new Timer(ms, new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				field[x][y].setVisible(show);
+				field[x][y].getParent().revalidate();
+				field[x][y].getParent().repaint();
+			}
+		});
+		timer.setRepeats(false);
+		timer.start();
+	}
+	
+	private void falldown(int x, int y)
+	{
+		for (int i = 0; i < x; i++)
+		{
+			delay(500*i, x-i, y, false);          // field[i][y] vanishes
+			field[x-i][y].steal(field[x-i-1][y]); // field[i][y] steals properties of field[i-1][y]
+			delay(500*(i+1), x-i, y, true);       // field[i][y] reappeares after 500 ms
+		}
+		// reset the top field
+		field[0][y].renew(0);
+	}
+}*/

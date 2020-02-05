@@ -6,6 +6,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 import java.lang.*; // for currentTimeMillis
 import java.io.*;
+import javax.swing.SwingUtilities;
 
 public class Fibgame
 {
@@ -14,7 +15,7 @@ public class Fibgame
 
 	private static NumberGrid grid;
 	
-	Fibgame()
+	public Fibgame()
 	{
 		JFrame f = new JFrame("Fibonacci game");
 		f.setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -32,7 +33,13 @@ public class Fibgame
 	
 	public static void main(String[] args)
 	{
-		new Fibgame();
-		grid.resetState();
+		SwingUtilities.invokeLater(new Runnable()
+		{
+			public void run()
+			{
+				new Fibgame();
+				grid.resetState();
+			}
+		});
 	}
 }

@@ -13,6 +13,7 @@ public class NumberField extends JButton
 	private void reset()
 	{
 		this.setText("" + GeneralMethods.fib(level+2));
+		//this.setVisible(true);
 	}
 	
 	public NumberField(int no)
@@ -34,7 +35,18 @@ public class NumberField extends JButton
 	{
 		level += i;
 		this.reset();
-		//System.out.println("dupa");
+	}
+	
+	public void renew(int i)
+	{
+		level = 0;
+		this.reset();
+	}
+	
+	public void steal(NumberField n)
+	{
+		this.level = n.level;
+		this.reset();
 	}
 /*	
 	public NumberField()

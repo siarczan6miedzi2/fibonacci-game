@@ -9,6 +9,7 @@ import java.io.*;
 public class NumberField extends JButton
 {
 	private int level;
+	private boolean listenerFlag;
 	
 	private void reset()
 	{
@@ -23,12 +24,23 @@ public class NumberField extends JButton
 		this.setBackground(Color.LIGHT_GRAY);
 		this.setBorder(BorderFactory.createLineBorder(Color.black, 2));
 		this.setFont(new Font("Courier", Font.BOLD, 30));
+		this.listenerFlag = true;
 		reset();
 	}
 	
 	public int getLevel()
 	{
 		return level;
+	}
+	
+	public boolean getListening()
+	{
+		return listenerFlag;
+	}
+	
+	public void setListening(boolean b)
+	{
+		listenerFlag = b;
 	}
 	
 	public void upgrade(int i)
@@ -39,13 +51,13 @@ public class NumberField extends JButton
 	
 	public void renew(int i)
 	{
-		level = 0;
+		level = i;
 		this.reset();
 	}
 	
 	public void steal(NumberField n)
 	{
-		this.level = n.level;
+		level = n.level;
 		this.reset();
 	}
 /*	

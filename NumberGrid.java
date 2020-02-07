@@ -7,34 +7,36 @@ import javax.swing.event.*;
 import java.io.*;
 import javax.swing.Timer;
 
-public class NumberGrid extends JPanel //implements ActionListener
+public class NumberGrid extends JPanel // implements ActionListener
 {
 	// macros
-	public static final int WAITING = 0; // no buttons clicked
-	public static final int CLICKED = 1; // 1 button clicked
-	public static final int ACTION = 2;  // 2 buttons clicked - ready for act
+	public static final int WAITING = 0;  // no buttons clicked
+	public static final int CLICKED = 1;  // 1 button clicked
+	public static final int ACTION = 2;   // 2 buttons clicked - ready for act
 	
 	private int fld1i; // coords of 1st clicked field
 	private int fld1j;
 	private int fld2i; // coords of 2nd clicked field
 	private int fld2j;
 	
-	private NumberField[][] field;
+	private NumberField[][] field; // core of the game
+	
 	private int state;
+	private int level;
 	
 	public NumberGrid(int d)
 	{
 		state = WAITING;
 		fld1i = fld1j = fld2i = fld2j = 0;
-//		System.out.println(state);
 		this.setBorder(BorderFactory.createLineBorder(Color.black, 2));
+		level = 0; // start with lvl 0, which corresponds to lvl 3 of the maximum field
 		field = new NumberField[d][d];
 		for (int i = 0; i < d; i++)
 			for (int j = 0; j < d; j++)
 			{
 				final int ii = i;
 				final int jj = j;
-				field[i][j] = new NumberField(0);
+				field[i][j] = new NumberField(GeneralMethods.randMax(3)); // start with fields of levels up to 3
 				this.add(field[i][j]);
 				field[i][j].addActionListener(new ActionListener()
 				{
@@ -49,6 +51,7 @@ public class NumberGrid extends JPanel //implements ActionListener
 	
 	private void buttonClicked(final int i, final int j)
 	{
+		if (field[i][j].getListening() == false) return; // do not act when you should not
 		state++; // WAITING -> CLICKED, CLICKED -> ACTION
 		if (state == CLICKED)
 		{
@@ -87,7 +90,7 @@ public class NumberGrid extends JPanel //implements ActionListener
 		return false;
 	}
 	
-	private int mergeable()
+	private int mergeable() // used in merging
 	{
 		int lvl1 = field[fld1i][fld1j].getLevel();
 		int lvl2 = field[fld2i][fld2j].getLevel();
@@ -95,6 +98,16 @@ public class NumberGrid extends JPanel //implements ActionListener
 		if (lvl1 - lvl2 == 1) return 2;       // mergeable (add 2 levels)
 		if (lvl2 - lvl1 == 1) return 1;       // mergeable (add 1 level)
 		return 0;                             // non mergeable
+	}
+	
+	private boolean mergeable(int fld1i, int fld1j, int fld2i, int fld2j) // used only to check if game over
+	{
+		int lvl1 = field[fld1i][fld1j].getLevel();
+		int lvl2 = field[fld2i][fld2j].getLevel();
+		if (lvl1 == 0 && lvl2 == 0) return true; // mergeable
+		if (lvl1 - lvl2 == 1) return true;       // mergeable
+		if (lvl2 - lvl1 == 1) return true;       // mergeable
+		return false;                            // non mergeable
 	}
 	
 	private void merge()
@@ -107,6 +120,23 @@ public class NumberGrid extends JPanel //implements ActionListener
 		}
 	}
 	
+	boolean gameOver()
+	{
+		// check in verses
+		for (int i = 0; i < field.length; i++)
+			for (int j = 0; j < field.length-1; j++)
+				if (mergeable(i, j, i, j+1)) return false;
+		// check in columns
+		for (int i = 0; i < field.length-1; i++)
+			for (int j = 0; j < field.length; j++)
+				if (mergeable(i, j, i+1, j)) return false;
+		return true;
+	}
+	
+	// IDEA: the function delay, instead of the [command] should receive the whole function as an argument.
+	// This may be done by lambdas or passing a function as an argument, depends on the specifications
+	// of JAVA language, which I don't know yet. To be considered later, as it is not crucial for the
+	// program to work, but would enhance the code readability
 	private void delay(int ms, int x, int y, String command)
 	{
 		Timer timer = new Timer(ms, new ActionListener()
@@ -132,8 +162,46 @@ public class NumberGrid extends JPanel //implements ActionListener
 				}
 				else if (command == "renew") // renew the field
 				{
-					field[x][y].renew(0);
+					// every grid level which is a square, extends possible levels for new-created fields by 1
+					field[x][y].renew(GeneralMethods.randMax(3+GeneralMethods.floorSqrt(level)));
 					field[x][y].setVisible(true);
+				}
+			}
+		});
+		timer.setRepeats(false);
+		timer.start();
+	}
+	
+	private void delay(int ms, String command)
+	{
+		Timer timer = new Timer(ms, new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				if (command == "halt") // halt clickability (during animations)
+					for (int i = 0; i < field.length; i++)
+						for (int j = 0; j < field.length; j++)
+							field[i][j].setListening(false);
+				else if (command == "resume") // resume clickability (after animations)
+					for (int i = 0; i < field.length; i++)
+						for (int j = 0; j < field.length; j++)
+							field[i][j].setListening(true);
+				else if (command == "recalculate") // recalculate the level
+				{
+				// the recalculation may also consider only the new-formed field,
+				// as it is the only one, which can enhance the grids level.
+				// To be considered in case of need of serious optimization
+					int lvl = 0;
+					for (int i = 0; i < field.length; i++)
+						for (int j = 0; j < field.length; j++)
+							if (field[i][j].getLevel() > lvl)
+								lvl = field[i][j].getLevel();
+					level = lvl - 3; // grid level is always 3 less than max field level
+				}
+				else if (command == "check") // check for game over
+				{
+					if (gameOver()) System.out.println("GAME OVER"); // TODO: make it show GAME OVER with GUI
 				}
 			}
 		});
@@ -143,6 +211,7 @@ public class NumberGrid extends JPanel //implements ActionListener
 	
 	private void falldown(int x, int y)
 	{
+		delay(0, "halt");                        // halt clickability
 		for (int i = 0; i < x; i++)
 		{
 			delay(200*i, x-i, y, "invisible");   // field[i][y] vanishes
@@ -152,35 +221,8 @@ public class NumberGrid extends JPanel //implements ActionListener
 		// finally, cope with the top field
 		delay(200*x, 0, y, "invisible");
 		delay(200*(x+1), 0, y, "renew");
+		delay(200*(x+1), "resume");              // resume clickability
+		delay(200*(x+1), "recalculate");         // recalculate the level
+		delay(200*(x+1)+50, "check");            // check for gameover
 	}
 }
-
-/*	// waits [ms] time and then [shows] (or hides) field[x][y]
-	public void delay(int ms, int x, int y, boolean show)
-	{
-		Timer timer = new Timer(ms, new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				field[x][y].setVisible(show);
-				field[x][y].getParent().revalidate();
-				field[x][y].getParent().repaint();
-			}
-		});
-		timer.setRepeats(false);
-		timer.start();
-	}
-	
-	private void falldown(int x, int y)
-	{
-		for (int i = 0; i < x; i++)
-		{
-			delay(500*i, x-i, y, false);          // field[i][y] vanishes
-			field[x-i][y].steal(field[x-i-1][y]); // field[i][y] steals properties of field[i-1][y]
-			delay(500*(i+1), x-i, y, true);       // field[i][y] reappeares after 500 ms
-		}
-		// reset the top field
-		field[0][y].renew(0);
-	}
-}*/

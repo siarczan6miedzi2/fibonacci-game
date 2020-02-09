@@ -24,7 +24,7 @@ public class Fibgame extends JFrame
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		f.setResizable(false);
-		grid = new NumberGrid(5);
+		grid = new NumberGrid(7);
 		grid.setBounds(50, 50, HEIGHT-100, HEIGHT-100);
 		f.add(grid);
 		

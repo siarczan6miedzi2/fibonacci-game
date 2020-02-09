@@ -201,7 +201,12 @@ public class NumberGrid extends JPanel // implements ActionListener
 				}
 				else if (command == "check") // check for game over
 				{
-					if (gameOver()) System.out.println("GAME OVER"); // TODO: make it show GAME OVER with GUI
+					if (gameOver()) // simply disable all buttons (for now, ofc)
+					{
+						for (int i = 0; i < field.length; i++)
+							for (int j = 0; j < field.length; j++)
+								field[i][j].setEnabled(false);
+					}
 				}
 			}
 		});
@@ -211,18 +216,19 @@ public class NumberGrid extends JPanel // implements ActionListener
 	
 	private void falldown(int x, int y)
 	{
+		int delayTime = 150;                     // delay time [ms]
 		delay(0, "halt");                        // halt clickability
 		for (int i = 0; i < x; i++)
 		{
-			delay(200*i, x-i, y, "invisible");   // field[i][y] vanishes
-			delay(200*i, x-i, y, "steal");       // field[i][y] steals properties of field[i-1][y]
-			delay(200*(i+1), x-i, y, "visible"); // field[i][y] reappeares after 300 ms
+			delay(delayTime*i, x-i, y, "invisible");   // field[i][y] vanishes
+			delay(delayTime*i, x-i, y, "steal");       // field[i][y] steals properties of field[i-1][y]
+			delay(delayTime*(i+1), x-i, y, "visible"); // field[i][y] reappeares after 300 ms
 		}
 		// finally, cope with the top field
-		delay(200*x, 0, y, "invisible");
-		delay(200*(x+1), 0, y, "renew");
-		delay(200*(x+1), "resume");              // resume clickability
-		delay(200*(x+1), "recalculate");         // recalculate the level
-		delay(200*(x+1)+50, "check");            // check for gameover
+		delay(delayTime*x, 0, y, "invisible");
+		delay(delayTime*(x+1), 0, y, "renew");
+		delay(delayTime*(x+1), "resume");              // resume clickability
+		delay(delayTime*(x+1), "recalculate");         // recalculate the level
+		delay(delayTime*(x+1)+50, "check");            // check for gameover (50 ms just to be sure, everything else has finished)
 	}
 }

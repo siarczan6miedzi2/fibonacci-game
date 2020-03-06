@@ -20,12 +20,15 @@ public class NumberGrid extends JPanel // implements ActionListener
 	private int fld2j;
 	
 	private NumberField[][] field; // core of the game
+	private Fibgame parent; // fibgame, the grid belongs to
 	
 	private int state;
 	private int level;
+	private int points;
 	
-	public NumberGrid(int d)
+	public NumberGrid(int d, Fibgame f)
 	{
+		parent = f;
 		state = WAITING;
 		fld1i = fld1j = fld2i = fld2j = 0;
 		this.setBorder(BorderFactory.createLineBorder(Color.black, 2));
@@ -67,6 +70,12 @@ public class NumberGrid extends JPanel // implements ActionListener
 			resetState();
 		}
 	}
+	
+/*	@Override
+	public Fibgame getParent()
+	{
+		return parent;
+	}*/
 	
 	public int getState()
 	{
@@ -116,6 +125,9 @@ public class NumberGrid extends JPanel // implements ActionListener
 		if (vicinalFields() && mergeFlag > 0)
 		{
 			field[fld2i][fld2j].upgrade(mergeFlag); // 1 level for default order, 2 levels for reversed order
+			points += GeneralMethods.fib(field[fld2i][fld2j].getLevel()+2); // HERE
+			//System.out.println(parent);
+			parent.setPoints(points);
 			falldown(fld1i, fld1j);                 // first clicked field generates the hole
 		}
 	}

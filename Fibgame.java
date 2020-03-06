@@ -1,4 +1,5 @@
 import java.awt.event.*;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -15,6 +16,7 @@ public class Fibgame extends JFrame
 	
 	private static JFrame f;
 	private static NumberGrid grid;
+	private static JLabel points;
 	
 	public Fibgame()
 	{
@@ -22,14 +24,25 @@ public class Fibgame extends JFrame
 		f.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		f.setLayout(null);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
 		f.setResizable(false);
-		grid = new NumberGrid(7);
+		
+		grid = new NumberGrid(7, this);
 		grid.setBounds(50, 50, HEIGHT-100, HEIGHT-100);
 		f.add(grid);
 		
+		points = new JLabel("0");
+		points.setBounds(3*WIDTH/5, 50, WIDTH/4, HEIGHT/4);
+		points.setFont(new Font("Courier", Font.BOLD, 100));
+		points.setForeground(Color.RED);
+		f.add(points);
+		
 		f.pack();
 		f.setVisible(true);
+	}
+	
+	public void setPoints(int i)
+	{
+		points.setText("" + i);
 	}
 	
 	public static void main(String[] args)

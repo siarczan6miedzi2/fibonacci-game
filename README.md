@@ -1,4 +1,4 @@
-# fibonacci-game
+# Fibgame
 The clicking game based on the Fibonacci sequence
 
 Merge 2 adjacent tiles by clicking on them.

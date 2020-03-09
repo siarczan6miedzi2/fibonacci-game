@@ -2,6 +2,7 @@ import java.awt.event.*;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.Dimension;
 import javax.swing.*;
 import javax.swing.event.*;
@@ -15,8 +16,44 @@ public class Fibgame extends JFrame
 	static final int HEIGHT = 900;
 	
 	private static JFrame f;
+	private static StartGrid sGrid;
 	private static NumberGrid grid;
 	private static JLabel points;
+	
+	private void createStart()
+	{
+		sGrid = new StartGrid(this);
+		sGrid.setBounds(100, 100, WIDTH-200, HEIGHT-200);
+		sGrid.setVisible(false);
+		f.add(sGrid);
+		f.pack();
+	}
+	
+	void showStart(boolean b)
+	{
+		sGrid.setVisible(b);
+	}
+	
+	private void createGame()
+	{
+		grid = new NumberGrid(7, this);
+		grid.setBounds(50, 50, HEIGHT-100, HEIGHT-100);
+		grid.setVisible(false);
+		f.add(grid);
+		
+		points = new JLabel("0");
+		points.setBounds(3*WIDTH/5, 50, WIDTH/4, HEIGHT/4);
+		points.setFont(new Font("Courier", Font.BOLD, 100));
+		points.setForeground(Color.RED);
+		points.setVisible(false);
+		f.add(points);
+	}
+	
+	void showGame(boolean b)
+	{
+		grid.setVisible(b);
+		points.setVisible(b);
+	}
 	
 	public Fibgame()
 	{
@@ -26,17 +63,12 @@ public class Fibgame extends JFrame
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setResizable(false);
 		
-		grid = new NumberGrid(7, this);
-		grid.setBounds(50, 50, HEIGHT-100, HEIGHT-100);
-		f.add(grid);
-		
-		points = new JLabel("0");
-		points.setBounds(3*WIDTH/5, 50, WIDTH/4, HEIGHT/4);
-		points.setFont(new Font("Courier", Font.BOLD, 100));
-		points.setForeground(Color.RED);
-		f.add(points);
+		createStart();
+		createGame();
+		showStart(true);
 		
 		f.pack();
+		f.setLocationRelativeTo(null);
 		f.setVisible(true);
 	}
 	
@@ -52,7 +84,7 @@ public class Fibgame extends JFrame
 			public void run()
 			{
 				new Fibgame();
-				grid.resetState();
+				//grid.resetState();
 			}
 		});
 	}

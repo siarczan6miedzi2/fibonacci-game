@@ -2,7 +2,7 @@ import java.util.Random;
 
 public final class GeneralMethods
 {
-	public final static int fib(int n) // nth Fibonacci number
+	public final static int fib(int n) // nth Fibonacci number: 0->0, 1->1, 2->1, 3->2, 4->3, 5->5, 6->8, 7->13, ...
 	{
 		if (n < 0) return -1; // TODO: learn throwing errors
 		if (n == 0) return 0;

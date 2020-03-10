@@ -58,7 +58,7 @@ public class NumberGrid extends JPanel // implements ActionListener
 		state++; // WAITING -> CLICKED, CLICKED -> ACTION
 		if (state == CLICKED)
 		{
-			field[i][j].setBackground(Color.RED);
+			field[i][j].setFont(new Font("Courier", Font.BOLD, 50)); // show clicked
 			fld1i = i;
 			fld1j = j;
 		}
@@ -71,12 +71,6 @@ public class NumberGrid extends JPanel // implements ActionListener
 		}
 	}
 	
-/*	@Override
-	public Fibgame getParent()
-	{
-		return parent;
-	}*/
-	
 	public int getState()
 	{
 		return this.state;
@@ -88,7 +82,7 @@ public class NumberGrid extends JPanel // implements ActionListener
 		for (int i = 0; i < field.length; i++)
 			for (int j = 0; j < field.length; j++)
 			{
-				field[i][j].setBackground(Color.LIGHT_GRAY);
+				field[i][j].setFont(new Font("Courier", Font.BOLD, 30)); // unshow clicked
 			}
 	}
 	

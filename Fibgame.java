@@ -18,7 +18,8 @@ public class Fibgame extends JFrame
 	private static JFrame f;
 	private static StartGrid sGrid;
 	private static NumberGrid grid;
-	private static JLabel points;
+	static Scores scores;
+	static JLabel points;
 	
 	private void createStart()
 	{
@@ -26,7 +27,6 @@ public class Fibgame extends JFrame
 		sGrid.setBounds(100, 100, WIDTH-200, HEIGHT-200);
 		sGrid.setVisible(false);
 		f.add(sGrid);
-		f.pack();
 	}
 	
 	void showStart(boolean b)
@@ -55,6 +55,19 @@ public class Fibgame extends JFrame
 		points.setVisible(b);
 	}
 	
+	private void createScores()
+	{
+		scores = new Scores(this);
+		scores.setBounds(100, 100, WIDTH-200, HEIGHT-200);
+		scores.setVisible(false);
+		f.add(scores);
+	}
+	
+	void showScores(boolean b)
+	{
+		scores.setVisible(b);
+	}
+	
 	public Fibgame()
 	{
 		f = new JFrame("Fibonacci game");
@@ -65,6 +78,7 @@ public class Fibgame extends JFrame
 		
 		createStart();
 		createGame();
+		createScores();
 		showStart(true);
 		
 		f.pack();

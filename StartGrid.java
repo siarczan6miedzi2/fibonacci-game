@@ -29,6 +29,7 @@ public class StartGrid extends JPanel
 		helpTextDisplay.setFont(new Font("Courier", Font.BOLD, 40));
 		helpTextDisplay.setLineWrap(true);
 		helpTextDisplay.setWrapStyleWord(true);
+		helpTextDisplay.setEditable(false);
 		helpDialog.add(helpTextDisplay);
 		
 		helpDialog.pack();

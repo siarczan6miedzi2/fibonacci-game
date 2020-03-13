@@ -29,6 +29,7 @@ public class NumberGrid extends JPanel // implements ActionListener
 	public NumberGrid(int d, Fibgame f)
 	{
 		parent = f;
+		
 		state = WAITING;
 		fld1i = fld1j = fld2i = fld2j = 0;
 		this.setBorder(BorderFactory.createLineBorder(Color.black, 2));
@@ -207,11 +208,14 @@ public class NumberGrid extends JPanel // implements ActionListener
 				}
 				else if (command == "check") // check for game over
 				{
-					if (gameOver()) // simply disable all buttons (for now, ofc)
+					if (gameOver()) // disable all buttons and show scoreboard
 					{
 						for (int i = 0; i < field.length; i++)
 							for (int j = 0; j < field.length; j++)
 								field[i][j].setEnabled(false);
+						parent.showScores(true);
+						parent.showGame(false);
+						parent.scores.displayScores(Integer.parseInt(parent.points.getText()));
 					}
 				}
 			}

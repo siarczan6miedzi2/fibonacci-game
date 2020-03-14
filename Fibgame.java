@@ -36,7 +36,7 @@ public class Fibgame extends JFrame
 	
 	private void createGame()
 	{
-		grid = new NumberGrid(7, this);
+		grid = new NumberGrid(3, this);
 		grid.setBounds(50, 50, HEIGHT-100, HEIGHT-100);
 		grid.setVisible(false);
 		f.add(grid);

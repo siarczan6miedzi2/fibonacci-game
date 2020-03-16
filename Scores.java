@@ -17,7 +17,6 @@ public class Scores extends JPanel
 	private JPanel buttons;
 	private JButton restartButton;
 	private JButton quitButton;
-	//private JTextArea scoreboard;
 	private JLabel scoreboard;
 	
 	void displayScores(int pts)
@@ -61,7 +60,7 @@ public class Scores extends JPanel
 				scs[i+1][0] = new String(scs[i][0]); // drop place to lower
 				scs[i+1][1] = new String(scs[i][1]);
 			}
-			scs[place][0] = "CuSO4";
+			scs[place][0] = parent.getUsername();
 			scs[place][1] = "" + pts;
 		}
 		
@@ -103,11 +102,6 @@ public class Scores extends JPanel
 		parent = f;
 		this.setLayout(new BorderLayout());
 		
-		//scoreboard = new JTextArea(""); // initiate scorebord text area
-		//scoreboard.setFont(new Font("Courier", Font.BOLD, 50));
-		//scoreboard.setLineWrap(false);
-		//scoreboard.setWrapStyleWord(false);
-		//scoreboard.setEditable(false);
 		scoreboard = new JLabel("");
 		this.add(scoreboard, BorderLayout.CENTER);
 		
@@ -116,12 +110,14 @@ public class Scores extends JPanel
 		buttons.setPreferredSize(new Dimension(1400, 100));
 		this.add(buttons, BorderLayout.PAGE_END);
 		
-		restartButton = new JButton("RESTART (not working for now; to be programmed :) )");
+		restartButton = new JButton("PLAY AGAIN");
 		restartButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent event)
 			{
-				// TODO: restart
+				parent.createGame();
+				parent.showScores(false);
+				parent.showGame(true);
 			}
 		});
 		buttons.add(restartButton);
@@ -135,8 +131,5 @@ public class Scores extends JPanel
 			}
 		});
 		buttons.add(quitButton);
-		
-		//this.setLayout(new GridLayout(1, 2, 50, 50));
-		//this.setLayout(new FlowLayout());
 	}
 }

@@ -15,6 +15,40 @@ public class StartGrid extends JPanel
 	
 	private Fibgame parent; // fibgame, the grid belongs to
 	
+	private void inputUsername()
+	{
+		JDialog inputUsernameDialog = new JDialog(parent);
+		inputUsernameDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		
+		inputUsernameDialog.setLayout(new GridLayout(0, 1, 50, 50));
+		inputUsernameDialog.setPreferredSize(new Dimension(parent.WIDTH-300, parent.HEIGHT-500));
+		
+		JLabel label = new JLabel("Pick a username: ");
+		label.setFont(new Font("Courier", Font.BOLD, 40));
+		inputUsernameDialog.add(label);
+		
+		JTextField user = new JTextField();
+		user.setFont(new Font("Courier", Font.BOLD, 60));
+		inputUsernameDialog.add(user);
+		
+		JButton accept = new JButton("OK");
+		inputUsernameDialog.add(accept);
+		accept.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent event)
+			{
+				inputUsernameDialog.dispose();
+				parent.username = user.getText().strip();
+				parent.showGame(true);
+				parent.showStart(false);
+			}
+		});
+		
+		inputUsernameDialog.pack();
+		inputUsernameDialog.setLocationRelativeTo(null);
+		inputUsernameDialog.setVisible(true);
+	}
+	
 	private void displayHelp()
 	{
 		JDialog helpDialog = new JDialog(parent, "help");
@@ -46,11 +80,9 @@ public class StartGrid extends JPanel
 		{
 			public void actionPerformed(ActionEvent event)
 			{
-				parent.showGame(true);
-				parent.showStart(false);
+				inputUsername();
 			}
 		});
-		
 		this.add(startButton);
 		
 		helpButton = new JButton("HELP");

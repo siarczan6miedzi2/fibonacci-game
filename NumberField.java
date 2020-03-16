@@ -36,7 +36,6 @@ public class NumberField extends JButton
 	
 	private void reset()
 	{
-		//System.out.print("dupa");
 		this.setText("" + GeneralMethods.fib(level+2));
 		// recolorize
 		int[] colorset = {0, 0, 0};
@@ -51,7 +50,6 @@ public class NumberField extends JButton
 	{
 		super();
 		level = no;
-		//this.setBackground(Color.LIGHT_GRAY);
 		this.setBorder(BorderFactory.createLineBorder(Color.black, 2));
 		this.setFont(new Font("Courier", Font.BOLD, 30));
 		this.listenerFlag = true;

@@ -6,7 +6,7 @@ import java.awt.GridLayout;
 import java.awt.Dimension;
 import javax.swing.*;
 import javax.swing.event.*;
-import java.lang.*; // for currentTimeMillis
+import java.lang.*;
 import java.io.*;
 import javax.swing.SwingUtilities;
 
@@ -17,9 +17,12 @@ public class Fibgame extends JFrame
 	
 	private static JFrame f;
 	private static StartGrid sGrid;
-	private static NumberGrid grid;
+	static NumberGrid grid;
+	static final int gridSize = 7;
 	static Scores scores;
 	static JLabel points;
+	
+	static String username = "";
 	
 	private void createStart()
 	{
@@ -34,9 +37,9 @@ public class Fibgame extends JFrame
 		sGrid.setVisible(b);
 	}
 	
-	private void createGame()
+	void createGame()
 	{
-		grid = new NumberGrid(3, this);
+		grid = new NumberGrid(gridSize, this);
 		grid.setBounds(50, 50, HEIGHT-100, HEIGHT-100);
 		grid.setVisible(false);
 		f.add(grid);
@@ -66,6 +69,11 @@ public class Fibgame extends JFrame
 	void showScores(boolean b)
 	{
 		scores.setVisible(b);
+	}
+	
+	String getUsername()
+	{
+		return username;
 	}
 	
 	public Fibgame()
@@ -98,7 +106,6 @@ public class Fibgame extends JFrame
 			public void run()
 			{
 				new Fibgame();
-				//grid.resetState();
 			}
 		});
 	}
